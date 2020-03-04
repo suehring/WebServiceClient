@@ -11,7 +11,10 @@ class WebServiceClient {
 	private $_url = null;
 	private $_reqHeaders = array();
 	private $_returnxfer = 1;
-	private $_defaultCurlOptions = array(
+	private $_postFields;
+	private $_contentLength;
+	private $_contentType;
+	private $_curlOptions = array(
 				"CURLOPT_CUSTOMREQUEST" => "POST", 
 				"CURLOPT_HTTPHEADER" => array(),
 				"CURLOPT_RETURNTRANSFER" => 1,
@@ -20,10 +23,12 @@ class WebServiceClient {
 
 	public function __construct($url = null) {
 		$this->_url = $url;
+		$this->_curlOptions['CURLOPT_URL'] = $url;
 		$this->_ch = curl_init($url);
 	} //end function construct
 
 	public function setReturnTransfer($xfer) {
+		$this->_curlOptions["CURLOPT_RETURNTRANSFER"] = $xfer;
 		$this->returnxfer = $xfer;
 	}
 
@@ -32,6 +37,7 @@ class WebServiceClient {
 	}
 
 	public function setMethod($method) {
+		$this->_curlOptions["CURLOPT_CUSTOMREQUEST"] = $method;
 		$this->_method = $method;
 	}  //end function setMethod
 
@@ -40,6 +46,7 @@ class WebServiceClient {
 	}
 
 	public function setURL($url) {
+		$this->_curlOptions["CURLOPT_URL"] = $url;
 		$this->_url = $url;
 	}
 
@@ -53,7 +60,7 @@ class WebServiceClient {
 				array_push($this->_reqHeaders,$value);
 			}
 		} else {
-			array_push($this->_reqHeaders,$value);
+			array_push($this->_reqHeaders,$header);
 		}
 	}
 	
@@ -61,14 +68,19 @@ class WebServiceClient {
 		return $this->_reqHeaders();
 	}
 
-	public function sendReq() {
+	public function send() {
 		//this returns boolean, should check it
-		curl_setopt_array($this->_ch,$this->_curlOptions);
+		$this->_curlOptions["CURLOPT_HTTPHEADER"] = $this->_reqHeaders;
+		//var_dump($this->_curlOptions);
+		//exit;
+		foreach ($this->_curlOptions as $key => $value) {
+			curl_setopt($this->_ch,$key,$value);
+		}
+		//curl_setopt_array($this->_ch,$this->_curlOptions);
 		if (is_null($this->_url)) {
 			return "Error: URL is not set";
 		}
-		curl_exec($this->_ch);
-
+		return curl_exec($this->_ch);
 	}
 
 	public function setOption($option,$value) {
@@ -76,4 +88,33 @@ class WebServiceClient {
 		curl_setopt($this->_ch,$option,$value);
 	}
 
+	public function setPostFields($fields,$type="json") {
+		if (!is_array($fields)) {
+			return "Error: Send an array into setPostFields";
+		}
+		if ($type == "json") {
+			$this->_postFields = json_encode($fields);
+			$this->_contentType = "application/json";
+		} else {
+			$this->_postFields = $fields;
+		}
+		$this->_contentLength = strlen($this->_postFields);
+		$header = "Content-Length: " . $this->_contentLength;
+		$this->setReqHeaders($header);
+		$this->setReqHeaders("Content-Type: " . $this->_contentType);
+		$this->_curlOptions["CURLOPT_POSTFIELDS"] = $this->_postFields;
+	} //end setPostFields
+
 } //end class WebServiceClient
+
+
+$client = new WebServiceClient("http://cnmt310.braingia.org/ziplookup.php");
+//$client->setMethod("GET");
+$apikey = "515051505150";
+$username = "suehring";
+$zip = "54481";
+$data = array("apikey" => $apikey, "zip" => $zip, "username" => $username);
+$client->setPostFields($data);
+//var_dump($client);
+print $client->send();
+
