@@ -15,20 +15,20 @@ class WebServiceClient {
 	private $_contentLength;
 	private $_contentType;
 	private $_curlOptions = array(
-				"CURLOPT_CUSTOMREQUEST" => "POST", 
-				"CURLOPT_HTTPHEADER" => array(),
-				"CURLOPT_RETURNTRANSFER" => 1,
-				"CURLOPT_URL" => null,
+				CURLOPT_CUSTOMREQUEST => "POST", 
+				CURLOPT_HTTPHEADER => array(),
+				CURLOPT_RETURNTRANSFER => 1,
+				CURLOPT_URL => null,
 		);
 
 	public function __construct($url = null) {
 		$this->_url = $url;
-		$this->_curlOptions['CURLOPT_URL'] = $url;
+		$this->_curlOptions[CURLOPT_URL] = $url;
 		$this->_ch = curl_init($url);
 	} //end function construct
 
 	public function setReturnTransfer($xfer) {
-		$this->_curlOptions["CURLOPT_RETURNTRANSFER"] = $xfer;
+		$this->_curlOptions[CURLOPT_RETURNTRANSFER] = $xfer;
 		$this->returnxfer = $xfer;
 	}
 
@@ -37,7 +37,7 @@ class WebServiceClient {
 	}
 
 	public function setMethod($method) {
-		$this->_curlOptions["CURLOPT_CUSTOMREQUEST"] = $method;
+		$this->_curlOptions[CURLOPT_CUSTOMREQUEST] = $method;
 		$this->_method = $method;
 	}  //end function setMethod
 
@@ -46,7 +46,7 @@ class WebServiceClient {
 	}
 
 	public function setURL($url) {
-		$this->_curlOptions["CURLOPT_URL"] = $url;
+		$this->_curlOptions[CURLOPT_URL] = $url;
 		$this->_url = $url;
 	}
 
@@ -70,9 +70,7 @@ class WebServiceClient {
 
 	public function send() {
 		//this returns boolean, should check it
-		$this->_curlOptions["CURLOPT_HTTPHEADER"] = $this->_reqHeaders;
-		//var_dump($this->_curlOptions);
-		//exit;
+		$this->_curlOptions[CURLOPT_HTTPHEADER] = $this->_reqHeaders;
 		foreach ($this->_curlOptions as $key => $value) {
 			curl_setopt($this->_ch,$key,$value);
 		}
@@ -102,12 +100,12 @@ class WebServiceClient {
 		$header = "Content-Length: " . $this->_contentLength;
 		$this->setReqHeaders($header);
 		$this->setReqHeaders("Content-Type: " . $this->_contentType);
-		$this->_curlOptions["CURLOPT_POSTFIELDS"] = $this->_postFields;
+		$this->_curlOptions[CURLOPT_POSTFIELDS] = $this->_postFields;
 	} //end setPostFields
 
 } //end class WebServiceClient
 
-
+/*
 $client = new WebServiceClient("http://cnmt310.braingia.org/ziplookup.php");
 //$client->setMethod("GET");
 $apikey = "515051505150";
@@ -117,4 +115,4 @@ $data = array("apikey" => $apikey, "zip" => $zip, "username" => $username);
 $client->setPostFields($data);
 //var_dump($client);
 print $client->send();
-
+*/
