@@ -1,7 +1,8 @@
 <?php
 
-/* Woefull incomplete cURL class
- * that can be used as a web service client
+/* Woefully incomplete cURL class
+ * that can be used as a web service client 
+ * for CNMT 310
  */
 
 class WebServiceClient {
