@@ -55,6 +55,10 @@ class WebServiceClient {
 		return $this->_url;
 	}
 
+  public function ignoreSSL() {
+    $this->_curlOptions[CURLOPT_SSL_VERIFYPEER] = false;
+  }
+
 	public function setReqHeaders($header) {
 		if (is_array($header)) {
 			foreach ($header as $value) {
@@ -66,7 +70,7 @@ class WebServiceClient {
 	}
 	
 	public function getReqHeaders() {
-		return $this->_reqHeaders();
+		return $this->_reqHeaders;
 	}
 
 	public function send() {
@@ -79,7 +83,12 @@ class WebServiceClient {
 		if (is_null($this->_url)) {
 			return "Error: URL is not set";
 		}
-		return curl_exec($this->_ch);
+		$return = curl_exec($this->_ch);
+		if ($return === false) {
+      return "Error: " . curl_error($this->_ch);
+    } else {
+      return $return;
+    }
 	}
 
 	public function setOption($option,$value) {
