@@ -55,6 +55,10 @@ class WebServiceClient {
     return $this->_url;
   }
 
+  public function getPostFields() {
+    return $this->_postFields;
+  }
+
   public function ignoreSSL() {
     $this->_curlOptions[CURLOPT_SSL_VERIFYPEER] = false;
   }
@@ -142,30 +146,31 @@ class WebServiceClient {
 
 } //end class WebServiceClient
 
-/*********************************************
+/**
 * Example Usage:
 * 
-**********************************************
 <?php
 require_once("WebServiceClient.php");
-$client = new WebServiceClient("http://cnmt310.braingia.org/ziplookup.php");
+$url = "http://YOURURL";
+$client = new WebServiceClient($url);
 
 // Default is to POST. If you need to change to a GET, here's how:
 //$client->setMethod("GET");
 
-$apikey = "abdihjefij2fj2";
-$apitoken = "api92859275";
-$zip = "54481";
-$data = array("apikey" => $apikey,
-             "apitoken" => $apitoken,
-             "zip" => $zip,
+$apihash = "abdihjefij2fj2";
+$apikey = "api92859275";
+$data = array("username" => $username, "password" => $password);
+$action = "authenticate";
+$fields = array("apikey" => $apikey,
+             "apihash" => $apihash,
+              "data" => $data,
+             "action" => $action,
              );
-$client->setPostFields($data);
+$client->setPostFields($fields);
 
 //For Debugging:
 //var_dump($client);
 
 print $client->send();
 
-**********************************************************
 **/
