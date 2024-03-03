@@ -157,8 +157,8 @@ $client = new WebServiceClient($url);
 // Default is to POST. If you need to change to a GET, here's how:
 //$client->setMethod("GET");
 
-$apihash = "abdihjefij2fj2";
-$apikey = "api92859275";
+$apihash = "apiNN";
+$apikey = "8675309";
 $data = array("username" => $username, "password" => $password);
 $action = "authenticate";
 $fields = array("apikey" => $apikey,
