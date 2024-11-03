@@ -1,6 +1,7 @@
 # WebServiceClient class
 Web Service Client Class (using cURL)
 
+```
 <?php
 require_once("WebServiceClient.php");
 $url = "http://YOURURL";
@@ -24,3 +25,4 @@ $client->setPostFields($fields);
 //var_dump($client);
 
 print $client->send();
+```
