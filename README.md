@@ -24,5 +24,18 @@ $client->setPostFields($fields);
 //For Debugging:
 //var_dump($client);
 
-print $client->send();
+$result = $client->send();
+
+// If necessary, first verify whether return result is json
+// If using PHP > 8.3 then use json_validate()
+// Otherwise, this works across older versions.
+
+$jsonResult = json_decode($result);
+if (json_last_error() !== JSON_ERROR_NONE) {
+  print "Result is not JSON";
+  exit;
+}
+
+var_dump($jsonResult);
+
 ```
