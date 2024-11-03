@@ -4,7 +4,7 @@ Web Service Client Class (using cURL)
 ```
 <?php
 require_once("WebServiceClient.php");
-$url = "http://YOURURL";
+$url = "http://URL-OF-WEBSERVICE";
 $client = new WebServiceClient($url);
 
 // Default is to POST. If you need to change to a GET, here's how:
