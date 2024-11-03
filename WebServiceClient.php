@@ -14,6 +14,7 @@ class WebServiceClient {
   private $_postFields;
   private $_contentLength;
   private $_contentType;
+  private $_responseCode;
   private $_curlOptions = array(
     CURLOPT_CUSTOMREQUEST => "POST", 
     CURLOPT_HTTPHEADER => array(),
@@ -77,7 +78,6 @@ class WebServiceClient {
   }
 
   public function send() {
-    //this returns boolean, should check it
     $this->_curlOptions[CURLOPT_HTTPHEADER] = $this->_reqHeaders;
     foreach ($this->_curlOptions as $key => $value) {
       curl_setopt($this->_ch,$key,$value);
@@ -86,8 +86,10 @@ class WebServiceClient {
       return "Error: URL is not set";
     }
     $return = curl_exec($this->_ch);
-    if ($return === false) {
-      $return = "Error: " . curl_error($this->_ch);
+    $this->_responseCode = curl_getinfo($this->_ch, CURLINFO_HTTP_CODE);
+
+    if ($return === false || $this->_responseCode != 200) {
+      $return = "Error: " . $this->_responseCode;
     }   
     $this->_reqHeaders = array();
     return $return;
@@ -144,5 +146,3 @@ class WebServiceClient {
   }
 
 } //end class WebServiceClient
-
-**/
