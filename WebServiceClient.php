@@ -5,7 +5,7 @@
  */
 
 class WebServiceClient {
-
+  private $password = "boo";
   private $_ch;
   private $_method = "POST";
   private $_url = null;
